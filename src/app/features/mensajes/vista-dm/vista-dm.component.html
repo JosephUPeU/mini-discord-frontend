@@ -1,0 +1,34 @@
+<div class="dm-container">
+  <div class="dm-header">
+    <img
+      [src]="'assets/avatars/' + (usuarioReceptor?.avatar ?? 'default.png')"
+      class="avatar"
+      alt="Avatar"
+    />
+
+    <h2>{{ usuarioReceptor?.nombre || "Usuario desconocido" }}</h2>
+  </div>
+
+  <div class="dm-mensajes" #scrollContainer>
+    <div
+      *ngFor="let mensaje of mensajes"
+      [class.propietario]="mensaje.usuarioId === usuarioActualId"
+    >
+      <div class="mensaje">
+        <span class="autor">{{ obtenerNombreUsuario(mensaje.usuarioId) }}</span>
+        <p class="contenido">{{ mensaje.contenido }}</p>
+        <span class="fecha">{{ mensaje.fecha | date : "short" }}</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="dm-input">
+    <input
+      type="text"
+      [(ngModel)]="nuevoMensaje"
+      (keyup.enter)="enviarMensaje()"
+      placeholder="Escribe tu mensaje..."
+    />
+    <button (click)="enviarMensaje()">Enviar</button>
+  </div>
+</div>

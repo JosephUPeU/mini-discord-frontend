@@ -1,0 +1,29 @@
+.contenedor {
+  display: grid;
+  grid-template-columns: 240px 1fr 200px;
+  height: 100vh;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+.columna {
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.canales {
+  background-color: #2f3136;
+  color: white;
+}
+
+.chat {
+  background-color: #36393f;
+  color: white;
+}
+
+.miembros {
+  background-color: #2f3136;
+  color: white;
+}
+

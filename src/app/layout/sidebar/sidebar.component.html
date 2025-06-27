@@ -1,0 +1,26 @@
+<div class="sidebar">
+  <div class="icon mensajes-icono" (click)="irAMensajesDirectos()" [class.activo]="enMensajesDirectos">
+    <img src="assets/icons/message.svg" alt="Mensajes" />
+  </div>
+
+  <div class="servidores">
+    <div
+      class="icon"
+      *ngFor="let servidor of servidores"
+      (click)="irAServidor(servidor)"
+      [class.activo]="servidor.id === servidorActivoId"
+      [title]="servidor.nombre"
+    >
+      <img
+        *ngIf="servidor.icono; else iniciales"
+        [src]="'assets/icons/' + servidor.icono"
+        alt="Icono Servidor"
+      />
+      <ng-template #iniciales>{{ abreviatura(servidor.nombre) }}</ng-template>
+    </div>
+  </div>
+
+  <div class="icon crear-servidor" (click)="crearServidor()" title="Crear servidor">
+    <img src="assets/icons/plus.svg" alt="Crear" />
+  </div>
+</div>

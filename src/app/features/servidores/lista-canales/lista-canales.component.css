@@ -1,0 +1,34 @@
+.titulo-categoria {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #999;
+  margin: 1rem 0 0.3rem;
+}
+
+.canal-item {
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+}
+
+.canal-item:hover {
+  background-color: #3e3f43;
+}
+
+.canal-item {
+  cursor: pointer;
+  padding: 0.3rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.canal-item:hover {
+  background-color: #3e3f43;
+}
+
+.canal-item.activo {
+  background-color: #4e5058;
+  font-weight: bold;
+  border-left: 3px solid #5865f2;
+  padding-left: 0.5rem;
+}

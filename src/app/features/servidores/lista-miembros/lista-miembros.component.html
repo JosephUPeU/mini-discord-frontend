@@ -1,0 +1,16 @@
+<div class="miembros">
+  <h3 class="titulo">Miembros</h3>
+  <ul class="lista">
+    <li *ngFor="let m of miembros" class="item">
+      <img [src]="m.avatar" alt="avatar" class="avatar" />
+      <div class="info">
+        <span class="nombre">{{ m.nombre }}</span>
+        <span 
+          class="rol" 
+          [style.backgroundColor]="obtenerColorRol(m.rolId)">
+          {{ obtenerNombreRol(m.rolId) }}
+        </span>
+      </div>
+    </li>
+  </ul>
+</div>

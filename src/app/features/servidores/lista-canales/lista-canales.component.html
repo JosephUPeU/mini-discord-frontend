@@ -1,0 +1,15 @@
+<div class="lista-categorias">
+  <div *ngFor="let grupo of canalesAgrupadosArray">
+    <h4 class="titulo-categoria">{{ grupo.categoria }}</h4>
+    <ul>
+      <li
+        *ngFor="let canal of grupo.canales"
+        (click)="irAlCanal(canal.id)"
+        [class.activo]="canal.id === canalActivoId"
+        class="canal-item"
+      >
+        # {{ canal.nombre }}
+      </li>
+    </ul>
+  </div>
+</div>
