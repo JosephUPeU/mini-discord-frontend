@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
-import { UserResponse } from '../../models/user-response';  
+import { UserResponse } from '../../models/user-response';
 import { UserRegisterRequest } from '../../models/user-register-request';
 import { LoginRequest } from '../../models/login-request';
 import { LoginResponse } from '../../models/login-response';
@@ -21,7 +21,7 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   private hasToken(): boolean {
-    return !!localStorage.getItem('jwt_token');
+    return !!localStorage.getItem('accessToken');
   }
 
   isAuthenticated(): Observable<boolean> {
@@ -40,10 +40,10 @@ export class AuthService {
     return this.http.post<LoginResponse>(this.loginUrl, request).pipe(
       tap(response => {
         // ✅ Guardamos el token correctamente usando la propiedad `accessToken`
-        localStorage.setItem('jwt_token', response.token);
+        localStorage.setItem('accessToken', response.accessToken);
 
         // ✅ Decodificamos el token para obtener el username (campo `sub`)
-        const payload = this.decodeJWT(response.token);
+        const payload = this.decodeJWT(response.accessToken);
         if (payload?.sub) {
           localStorage.setItem('username', payload.sub);
         }
@@ -55,14 +55,14 @@ export class AuthService {
   }
   // Método para cerrar sesión
   logout(): void {
-    localStorage.removeItem('jwt_token');
+    localStorage.removeItem('accessToken');
     localStorage.removeItem('username'); // Opcional
     this.isAuthenticatedSubject.next(false); // Emitir que el usuario no está autenticado
   }
 
   // Obtener el token almacenado
   getToken(): string | null {
-    return localStorage.getItem('jwt_token');
+    return localStorage.getItem('accessToken');
   }
 
   // Obtener el username del token (si lo almacenas) o directamente del localStorage
