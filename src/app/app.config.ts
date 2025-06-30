@@ -1,23 +1,14 @@
-import { ApplicationConfig } from '@angular/core';
-import { provideRouter, withComponentInputBinding, withPreloading, PreloadAllModules, withViewTransitions, withDebugTracing } from '@angular/router';
+import { ApplicationConfig, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import { routes } from './app.routes';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { appRoutes } from './app.routes';
-// Aquí irán interceptores personalizados si los agregas
-// import { authInterceptor } from './core/interceptors/auth.interceptor';
+import { AuthInterceptor } from './core/services/http.interceptor';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideRouter(
-      appRoutes,
-      withPreloading(PreloadAllModules),
-      withComponentInputBinding(),
-      withViewTransitions(), // animaciones suaves entre rutas
-      // withDebugTracing(), // Descomenta solo para depurar rutas en consola
-    ),
-    provideHttpClient(
-      withInterceptors([
-        // authInterceptor, // ← Descomenta cuando lo tengas listo
-      ])
-    )
-  ]
+  providers: [provideZoneChangeDetection({ eventCoalescing: true }),
+    provideHttpClient(withInterceptors([AuthInterceptor])),
+    provideRouter(routes),
+    importProvidersFrom(ReactiveFormsModule, FormsModule)]
 };

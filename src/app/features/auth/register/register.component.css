@@ -1,27 +1,81 @@
-  .login-container, .register-container {
-    width: 300px;
-    margin: 40px auto;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #2f3136;
+}
 
-  input {
-    padding: 8px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
+.register-form {
+  background-color: #36393f;
+  padding: 30px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  min-width: 280px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
 
-  button {
-    padding: 10px;
-    background-color: #5865f2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-weight: bold;
-  }
+.register-input,
+.register-button {
+  margin: 8px 0;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 15px;
+}
 
-  .error { color: crimson; font-size: 14px; }
-  .mensaje { color: green; font-size: 14px; }
+.register-button {
+  background-color: #5865f2;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
 
+.register-button:hover {
+  background-color: #4752c4;
+}
+
+.register-title {
+  color: white;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.register-label {
+  color: white;
+  margin-top: 10px;
+}
+
+.register-error {
+  color: red;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.register-footer {
+  margin-top: 16px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register-footer-text {
+  color: white;
+  font-size: 14px;
+}
+
+.register-link-button {
+  background: none;
+  color: #00b0f4;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  margin-top: 4px;
+  text-decoration: underline;
+}
+
+.register-link-button:hover {
+  color: #63c5ff;
+}

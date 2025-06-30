@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { ServidorService } from '../../../core/services/servidor.service';
+//import { ServidorService } from '../../../core/services/servidor.service';
 import { Canal } from '../../../models/canal.model';
 
 @Component({
@@ -18,15 +18,15 @@ export class ListaCanalesComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private servidorService: ServidorService
+   // private servidorService: ServidorService
   ) {}
 
   ngOnInit(): void {
   const idServidor = this.route.snapshot.paramMap.get('id') ?? '';
-  const canales = this.servidorService.obtenerCanales(idServidor);
+  //const canales = this.servidorService.obtenerCanales(idServidor);
 
   const agrupados: Record<string, Canal[]> = {};
-  canales.forEach(canal => {
+ /* canales.forEach(canal => {
     if (!agrupados[canal.categoria]) {
       agrupados[canal.categoria] = [];
     }
@@ -47,5 +47,6 @@ export class ListaCanalesComponent implements OnInit {
   irAlCanal(canalId: string): void {
     const servidorId = this.route.snapshot.paramMap.get('id') ?? '';
     this.router.navigate([`/servidores/${servidorId}/canales/${canalId}`]);
+  }*/
   }
 }

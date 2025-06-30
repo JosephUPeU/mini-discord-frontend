@@ -1,26 +1,76 @@
+<!-- CONTENEDOR PRINCIPAL DEL SIDEBAR -->
 <div class="sidebar">
-  <div class="icon mensajes-icono" (click)="irAMensajesDirectos()" [class.activo]="enMensajesDirectos">
-    <img src="assets/icons/message.svg" alt="Mensajes" />
+  <!-- Icono de Mensajes Directos -->
+  <div
+    class="icono"
+    (click)="irAMensajes()"
+    title="Mensajes Directos">
+    💬
   </div>
 
-  <div class="servidores">
-    <div
-      class="icon"
-      *ngFor="let servidor of servidores"
-      (click)="irAServidor(servidor)"
-      [class.activo]="servidor.id === servidorActivoId"
-      [title]="servidor.nombre"
-    >
-      <img
-        *ngIf="servidor.icono; else iniciales"
-        [src]="'assets/icons/' + servidor.icono"
-        alt="Icono Servidor"
-      />
-      <ng-template #iniciales>{{ abreviatura(servidor.nombre) }}</ng-template>
+  <hr />
+
+  <!-- Lista de servidores -->
+  <div
+    *ngFor="let servidor of servidores"
+    class="icono servidor"
+    [title]="servidor.nombre"
+    (click)="irAServidor(servidor.id)">
+    
+    <!-- Si tiene icono, mostrar imagen -->
+    <div class="icono-texto">{{ getIniciales(servidor.nombre) }}</div>
+
+
+    <!-- Si no tiene icono, mostrar las iniciales -->
+    <ng-template #sinIcono>
+      <div class="icono-texto">
+        {{ getIniciales(servidor.nombre) }}
+      </div>
+    </ng-template>
+  </div>
+
+  <hr />
+
+  <!-- Botón para crear servidor -->
+  <div
+    class="icono"
+    (click)="toggleModal()"
+    title="Crear servidor">
+    ➕
+  </div>
+</div>
+
+<!-- MODAL DE CREACIÓN DE SERVIDOR -->
+<div class="modal" *ngIf="showModal">
+  <div class="modal-overlay" (click)="toggleModal()"></div>
+
+  <div class="modal-content">
+    <h2 class="modal-title">Crear un nuevo servidor</h2>
+    <p class="modal-subtitle">Organiza una comunidad, tu grupo de estudio o tus amigos.</p>
+
+    <label for="nombre" class="modal-label">Nombre del servidor</label>
+    <input
+      id="nombre"
+      [(ngModel)]="nombreServidor"
+      placeholder="Ej: Comunidad de Historia"
+      class="modal-input"
+    />
+
+    <label for="descripcion" class="modal-label">Descripción</label>
+    <textarea
+      id="descripcion"
+      [(ngModel)]="descripcionServidor"
+      placeholder="Tema, propósito, grupo, etc."
+      class="modal-textarea"
+    ></textarea>
+
+    <p *ngIf="errorServidor" class="modal-error">{{ errorServidor }}</p>
+
+    <div class="modal-actions">
+      <button (click)="toggleModal()" class="modal-cancel">Cancelar</button>
+      <button (click)="crearServidor()" [disabled]="loading" class="modal-confirm">
+        {{ loading ? 'Creando...' : 'Crear' }}
+      </button>
     </div>
-  </div>
-
-  <div class="icon crear-servidor" (click)="crearServidor()" title="Crear servidor">
-    <img src="assets/icons/plus.svg" alt="Crear" />
   </div>
 </div>

@@ -4,7 +4,7 @@
     <ul>
       <li
         *ngFor="let canal of grupo.canales"
-        (click)="irAlCanal(canal.id)"
+
         [class.activo]="canal.id === canalActivoId"
         class="canal-item"
       >

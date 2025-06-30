@@ -1,56 +1,94 @@
 import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { ServidoresService } from '../../core/services/servidor.service';
+import { ServidorResponse, ServidorCreateRequest } from '../../models/servidor.model';
 import { Router } from '@angular/router';
-import { Servidor } from '../../models/servidor.model';
-import { ServidorService } from '../../core/services/servidor.service';
 
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+   imports: [CommonModule, FormsModule],
   templateUrl: './sidebar.component.html',
-  styleUrls: ['./sidebar.component.css']
+  styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent implements OnInit {
-  usuarioId = 'u1'; // Simulación temporal del usuario autenticado
-  servidores: Servidor[] = [];
-  servidorActivoId: string | null = null;
-  enMensajesDirectos: boolean = false;
+  servidores: ServidorResponse[] = [];
+
+  // Modal
+  showModal: boolean = false;
+  nombreServidor: string = '';
+  descripcionServidor: string = '';
+  errorServidor: string = '';
+  loading: boolean = false;
 
   constructor(
-    private servidorService: ServidorService,
+    private servidoresService: ServidoresService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.servidores = this.servidorService.obtenerServidoresDeUsuario(this.usuarioId);
-    this.actualizarEstadoRuta();
-    this.router.events.subscribe(() => this.actualizarEstadoRuta());
+    this.cargarServidores();
   }
 
-  actualizarEstadoRuta(): void {
-    const url = this.router.url;
-    this.enMensajesDirectos = url.includes('/mensajes');
-    const match = url.match(/\/servidores\/([^/]+)/);
-    this.servidorActivoId = match ? match[1] : null;
+  cargarServidores(): void {
+    this.servidoresService.getServidoresDelUsuario().subscribe({
+      next: (data) => {
+        this.servidores = data;
+      },
+      error: (err) => {
+        console.error('[Sidebar] Error al cargar servidores:', err);
+        this.servidores = [];
+      },
+    });
   }
 
-  irAMensajesDirectos(): void {
-    this.router.navigate(['/mensajes', this.usuarioId]);
+  irAMensajes(): void {
+    this.router.navigate(['/mensajes']);
   }
 
-  irAServidor(servidor: Servidor): void {
-    const canalPredeterminado = servidor.canales[0];
-    if (canalPredeterminado) {
-      this.router.navigate(['/servidores', servidor.id, 'canales', canalPredeterminado.id]);
-    }
+  irAServidor(id: string): void {
+    this.router.navigate(['/servidores', id]);
+  }
+
+  toggleModal(): void {
+    this.showModal = !this.showModal;
+    this.errorServidor = '';
+    this.nombreServidor = '';
+    this.descripcionServidor = '';
   }
 
   crearServidor(): void {
-    alert('Funcionalidad aún no implementada');
+    if (!this.nombreServidor.trim()) {
+      this.errorServidor = 'El nombre del servidor no puede estar vacío.';
+      return;
+    }
+
+    this.loading = true;
+
+    const request: ServidorCreateRequest = {
+      nombre: this.nombreServidor.trim(),
+      descripcion: this.descripcionServidor.trim(),
+    };
+
+    this.servidoresService.crearServidor(request).subscribe({
+      next: (nuevoServidor) => {
+        this.servidores.push(nuevoServidor); // Actualiza la lista local
+        this.toggleModal();
+        this.router.navigate(['/servidores', nuevoServidor.id]); // Redirige automáticamente
+      },
+      error: (err) => {
+        console.error('[Sidebar] Error al crear servidor:', err);
+        this.errorServidor = 'No se pudo crear el servidor. Intenta nuevamente.';
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      },
+    });
   }
 
-  abreviatura(nombre: string): string {
-    return nombre.slice(0, 2).toUpperCase();
+  getIniciales(nombre: string): string {
+    return nombre.trim().substring(0, 2).toUpperCase();
   }
 }

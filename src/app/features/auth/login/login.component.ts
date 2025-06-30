@@ -1,29 +1,44 @@
 import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth.service';
+import { LoginRequest } from '../../../models/auth.model';
 
 @Component({
-  standalone: true,
   selector: 'app-login',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css'],
-  imports: [FormsModule]
+  styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  email = '';
+  username = '';
   password = '';
   error = '';
+  loading = false;
 
-  constructor(private auth: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  onLogin(): void {
-    this.auth.login(this.email, this.password).subscribe({
-      next: res => {
-        localStorage.setItem('token', res.token);
-        this.router.navigate(['/inicio']);
-      },
-      error: err => this.error = err.message
+  submit(form: NgForm) {
+    if (form.invalid) return;
+
+    this.loading = true;
+    const request: LoginRequest = {
+      username: this.username,
+      password: this.password
+    };
+
+    this.authService.login(request).subscribe({
+      next: () => this.router.navigate(['/servidores']),
+      error: (err) => {
+        this.error = err.message || 'Error desconocido';
+        this.loading = false;
+      }
     });
+  }
+
+  goToRegister() {
+    this.router.navigate(['/auth/register']);
   }
 }

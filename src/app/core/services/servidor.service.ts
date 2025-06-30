@@ -1,105 +1,108 @@
 import { Injectable } from '@angular/core';
-import { SERVIDORES_MOCK } from '../../mocks/servidores.mock';
-import { USUARIOS_MOCK } from '../../mocks/usuarios.mock';
-import { Servidor } from '../../models/servidor.model';
-import { Canal } from '../../models/canal.model';
-import { Miembro } from '../../models/miembro.model';
-import { Rol } from '../../models/rol.model';
-import { Usuario } from '../../models/usuario.model';
+import { HttpClient } from '@angular/common/http';
+import {
+  ServidorCreateRequest,
+  ServidorResponse,
+  ServidorUpdateRequest,
+  MiembroAddRequest,
+  MiembroResponse,
+  MiembroUpdateRolesRequest,
+  RolCreateRequest,
+  RolResponse,
+  RolUpdateRequest
+} from '../../models/servidor.model';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class ServidorService {
-  private servidores: Servidor[] = SERVIDORES_MOCK;
-  private usuarios: Usuario[] = USUARIOS_MOCK;
+export class ServidoresService {
+  private baseUrl = 'http://localhost:8080/api/servidores';
 
-  // Obtener un servidor completo por ID
-  obtenerServidor(id: string): Servidor | undefined {
-    return this.servidores.find(s => s.id === id);
+  constructor(private http: HttpClient) {}
+
+  // ✅ Crear un nuevo servidor (NO se manda userId)
+  crearServidor(request: ServidorCreateRequest): Observable<ServidorResponse> {
+    return this.http.post<ServidorResponse>(`${this.baseUrl}`, request);
   }
 
-  // Obtener todos los servidores donde participa el usuario
-  obtenerServidoresDeUsuario(usuarioId: string): Servidor[] {
-    return this.servidores.filter(s => s.miembros.some(m => m.usuarioId === usuarioId));
+  // ✅ Obtener todos los servidores del usuario autenticado
+  getServidoresDelUsuario(): Observable<ServidorResponse[]> {
+    return this.http.get<ServidorResponse[]>(`${this.baseUrl}/usuario`);
   }
 
-  // Obtener todos los canales de un servidor
-  obtenerCanales(idServidor: string): Canal[] {
-    return this.obtenerServidor(idServidor)?.canales ?? [];
+  // ✅ Obtener un servidor específico por ID
+  getServidorById(servidorId: string): Observable<ServidorResponse> {
+    return this.http.get<ServidorResponse>(`${this.baseUrl}/${servidorId}`);
   }
 
-  // Obtener solo los canales que el usuario puede ver (según su rol)
-  obtenerCanalesVisibles(idServidor: string, usuarioId: string): Canal[] {
-    const servidor = this.obtenerServidor(idServidor);
-    if (!servidor) return [];
+  // ✅ Editar un servidor
+  updateServidor(servidorId: string, request: ServidorUpdateRequest): Observable<ServidorResponse> {
+    return this.http.put<ServidorResponse>(`${this.baseUrl}/${servidorId}`, request);
+  }
 
-    const miembro = servidor.miembros.find(m => m.usuarioId === usuarioId);
-    if (!miembro) return [];
+  // ✅ Eliminar un servidor
+  deleteServidor(servidorId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${servidorId}`);
+  }
 
-    const rol = servidor.roles.find(r => r.id === miembro.rolId);
-    if (!rol) return [];
+  // ✅ Añadir miembro a un servidor
+  addMiembro(servidorId: string, request: MiembroAddRequest): Observable<ServidorResponse> {
+    return this.http.post<ServidorResponse>(`${this.baseUrl}/${servidorId}/miembros`, request);
+  }
 
-    return servidor.canales.filter(canal =>
-      canal.permisos.some(p => p.rolId === rol.id && p.verCanal)
+  // ✅ Eliminar miembro de un servidor
+  removeMiembro(servidorId: string, username: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${servidorId}/miembros/${username}`);
+  }
+
+  // ✅ Actualizar roles de un miembro
+  updateMiembroRoles(
+    servidorId: string,
+    username: string,
+    request: MiembroUpdateRolesRequest
+  ): Observable<ServidorResponse> {
+    return this.http.put<ServidorResponse>(
+      `${this.baseUrl}/${servidorId}/miembros/${username}/roles`,
+      request
     );
   }
 
-  // Obtener miembros de un servidor
-  obtenerMiembros(idServidor: string): Miembro[] {
-    return this.obtenerServidor(idServidor)?.miembros ?? [];
+  // ✅ Obtener miembros de un servidor
+  getMiembros(servidorId: string): Observable<MiembroResponse[]> {
+    return this.http.get<MiembroResponse[]>(`${this.baseUrl}/${servidorId}/miembros`);
   }
 
-  // Obtener un miembro específico
-  obtenerMiembro(idServidor: string, usuarioId: string): Miembro | undefined {
-    return this.obtenerServidor(idServidor)?.miembros.find(m => m.usuarioId === usuarioId);
+  // ✅ Obtener roles de un miembro
+  getRolesDeUsuario(servidorId: string, username: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/${servidorId}/miembros/${username}/roles`);
   }
 
-  // Obtener todos los roles de un servidor
-  obtenerRoles(idServidor: string): Rol[] {
-    return this.obtenerServidor(idServidor)?.roles ?? [];
+  // ✅ Obtener permisos de un miembro
+  getPermisosDeUsuario(servidorId: string, username: string): Observable<string[]> {
+    return this.http.get<string[]>(`${this.baseUrl}/${servidorId}/miembros/${username}/permisos`);
   }
 
-  // Obtener el rol asignado a un miembro
-  obtenerRolDeMiembro(idServidor: string, usuarioId: string): Rol | undefined {
-    const miembro = this.obtenerMiembro(idServidor, usuarioId);
-    return this.obtenerServidor(idServidor)?.roles.find(r => r.id === miembro?.rolId);
+  // ✅ Crear un nuevo rol
+  crearRol(servidorId: string, request: RolCreateRequest): Observable<ServidorResponse> {
+    return this.http.post<ServidorResponse>(`${this.baseUrl}/${servidorId}/roles`, request);
   }
 
-  // Obtener nombre del rol de un miembro
-  obtenerNombreRol(idServidor: string, usuarioId: string): string {
-    return this.obtenerRolDeMiembro(idServidor, usuarioId)?.nombre ?? 'Invitado';
+  // ✅ Editar un rol
+  editarRol(servidorId: string, rolId: string, request: RolUpdateRequest): Observable<RolResponse> {
+    return this.http.put<RolResponse>(`${this.baseUrl}/${servidorId}/roles/${rolId}`, request);
   }
 
-  // Obtener color del rol
-  obtenerColorRol(idServidor: string, usuarioId: string): string {
-    return this.obtenerRolDeMiembro(idServidor, usuarioId)?.color ?? '#ccc';
+  // ✅ Eliminar un rol
+  eliminarRol(servidorId: string, rolId: string): Observable<void> {
+    return this.http.delete<void>(`${this.baseUrl}/${servidorId}/roles/${rolId}`);
   }
 
-  // Obtener todos los usuarios registrados
-  obtenerTodosLosUsuarios(): Usuario[] {
-    return this.usuarios;
+  // ✅ Obtener todos los roles de un servidor
+  getRoles(servidorId: string): Observable<RolResponse[]> {
+    return this.http.get<RolResponse[]>(`${this.baseUrl}/${servidorId}/roles`);
   }
 
-  // Obtener un usuario por su ID
-  obtenerUsuario(idUsuario: string): Usuario | undefined {
-    return this.usuarios.find(u => u.id === idUsuario);
-  }
-
-  // Verifica si un usuario tiene permiso específico en un canal
-  tienePermiso(
-    idServidor: string,
-    idCanal: string,
-    usuarioId: string,
-    tipo: 'verCanal' | 'escribirMensajes' | 'eliminarMensajes'
-  ): boolean {
-    const servidor = this.obtenerServidor(idServidor);
-    if (!servidor) return false;
-
-    const miembro = servidor.miembros.find(m => m.usuarioId === usuarioId);
-    if (!miembro) return false;
-
-    const canal = servidor.canales.find(c => c.id === idCanal);
-    if (!canal) return false;
-
-    return canal.permisos.some(p => p.rolId === miembro.rolId && p[tipo]);
+  // ✅ Obtener un rol específico por nombre
+  getRolPorNombre(servidorId: string, rolNombre: string): Observable<RolResponse> {
+    return this.http.get<RolResponse>(`${this.baseUrl}/${servidorId}/roles/${rolNombre}`);
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
-import { ServidorService } from '../../../core/services/servidor.service';
+//import { ServidorService } from '../../../core/services/servidor.service';
 import { Miembro } from '../../../models/miembro.model';
 import { Rol } from '../../../models/rol.model';
 
@@ -19,13 +19,13 @@ export class ListaMiembrosComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private servidorService: ServidorService
+  //  private servidorService: ServidorService
   ) {}
 
   ngOnInit(): void {
     const idServidor = this.route.snapshot.paramMap.get('id') ?? '';
-    this.miembros = this.servidorService.obtenerMiembros(idServidor);
-    this.roles = this.servidorService.obtenerRoles(idServidor);
+   // this.miembros = this.servidorService.obtenerMiembros(idServidor);
+    //this.roles = this.servidorService.obtenerRoles(idServidor);
   }
 
   obtenerColorRol(rolId: string): string {
