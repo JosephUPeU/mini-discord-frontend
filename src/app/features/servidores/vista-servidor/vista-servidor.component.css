@@ -1,29 +1,35 @@
-.contenedor {
-  display: grid;
-  grid-template-columns: 240px 1fr 200px;
-  height: 100vh;
-  overflow: hidden;
+.vista-servidor {
+  display: flex;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 }
 
 .columna {
-  padding: 1rem;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
-.canales {
+/* Canales (izquierda) y Miembros (derecha) con mismo ancho */
+.canales,
+.miembros {
+  width: 240px; /* valor por defecto */
+  min-width: 200px;
+  max-width: 320px;
   background-color: #2f3136;
-  color: white;
-}
-
-.chat {
-  background-color: #36393f;
-  color: white;
+  border-right: 1px solid #202225;
 }
 
 .miembros {
-  background-color: #2f3136;
-  color: white;
+  border-left: 1px solid #202225;
+  border-right: none;
 }
 
+/* Mensajes ocupa el resto */
+.mensajes {
+  flex: 1;
+  min-width: 300px;
+  background-color: #36393f;
+  overflow: hidden;
+}

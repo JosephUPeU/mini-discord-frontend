@@ -1,15 +1,40 @@
-<div class="lista-categorias">
-  <div *ngFor="let grupo of canalesAgrupadosArray">
-    <h4 class="titulo-categoria">{{ grupo.categoria }}</h4>
-    <ul>
-      <li
-        *ngFor="let canal of grupo.canales"
+<div class="lista-canales">
+  <div class="encabezado">
+    <h2>Canales</h2>
+    <button class="btn-agregar" (click)="agregarCanal()">+</button>
+  </div>
 
-        [class.activo]="canal.id === canalActivoId"
+  <div *ngIf="cargando">Cargando canales...</div>
+  <div *ngIf="!cargando && canales.length === 0">No hay canales en este servidor.</div>
+
+  <ul *ngIf="!cargando && canales.length > 0" class="canales-lista">
+    <li *ngFor="let canal of canales"
         class="canal-item"
-      >
-        # {{ canal.nombre }}
-      </li>
-    </ul>
+        [routerLink]="['/servidores', servidorId, 'canal', canal.id]"
+        routerLinkActive="activo">
+      <span class="canal-nombre"># {{ canal.nombre }}</span>
+      <span class="canal-tipo">({{ canal.tipo.toLowerCase() }})</span>
+    </li>
+  </ul>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" *ngIf="mostrarModal()">
+  <div class="modal">
+    <h3>Crear nuevo canal</h3>
+
+    <label>Nombre:</label>
+    <input type="text" [(ngModel)]="nuevoCanal.nombre" />
+
+    <label>Tipo:</label>
+    <select [(ngModel)]="nuevoCanal.tipo">
+      <option value="TEXTO">Texto</option>
+      <option value="VOZ">Voz</option>
+    </select>
+
+    <div class="acciones">
+      <button (click)="confirmarCreacion()">Crear</button>
+      <button (click)="cancelarCreacion()">Cancelar</button>
+    </div>
   </div>
 </div>

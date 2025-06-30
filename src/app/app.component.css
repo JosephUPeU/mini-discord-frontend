@@ -1,11 +1,5 @@
-.app-layout {
-  display: flex;
-  height: 100vh;
-}
-
-.layout-main-area {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  overflow: hidden;
+/* Global app styles, dejar vacío o base general */
+:host {
+  display: block;
+  height: 100%;
 }

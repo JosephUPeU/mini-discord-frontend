@@ -32,16 +32,21 @@ export class SidebarComponent implements OnInit {
   }
 
   cargarServidores(): void {
-    this.servidoresService.getServidoresDelUsuario().subscribe({
-      next: (data) => {
-        this.servidores = data;
-      },
-      error: (err) => {
-        console.error('[Sidebar] Error al cargar servidores:', err);
-        this.servidores = [];
-      },
-    });
-  }
+  this.servidoresService.getServidoresDelUsuario().subscribe({
+    next: (data) => {
+      console.log('✅ Servidores cargados:', data);
+      this.servidores = data;
+    },
+    error: (err) => {
+      console.error('[Sidebar] ❌ Error al cargar servidores:', err);
+      console.log('⛔️ Status:', err.status);
+      console.log('⛔️ Message:', err.message);
+      console.log('⛔️ Error completo:', err);
+      this.servidores = [];
+    },
+  });
+}
+
 
   irAMensajes(): void {
     this.router.navigate(['/mensajes']);

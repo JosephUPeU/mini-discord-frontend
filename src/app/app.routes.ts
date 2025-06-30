@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AuthGuard } from './core/guards/auth.guard';
 import { PublicGuard } from './core/guards/public.guard';
+import { MainViewComponent } from './layout/main-view/main-view.component';
 
 export const routes: Routes = [
   {
@@ -10,21 +11,26 @@ export const routes: Routes = [
     canActivate: [PublicGuard]
   },
   {
-    path: 'mensajes',
-    loadChildren: () =>
-      import('./features/mensajes/mensajes.routes').then((m) => m.MENSAJES_ROUTES),
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'servidores',
-    loadChildren: () =>
-      import('./features/servidores/servidores.routes').then((m) => m.SERVIDORES_ROUTES),
-    canActivate: [AuthGuard]
-  },
-  {
     path: '',
-    redirectTo: 'auth/login',
-    pathMatch: 'full'
+    component: MainViewComponent,
+    canActivate: [AuthGuard],
+    children: [
+      {
+        path: 'mensajes',
+        loadChildren: () =>
+          import('./features/mensajes/mensajes.routes').then((m) => m.MENSAJES_ROUTES)
+      },
+      {
+        path: 'servidores',
+        loadChildren: () =>
+          import('./features/servidores/servidores.routes').then((m) => m.SERVIDORES_ROUTES)
+      },
+      {
+        path: '',
+        redirectTo: 'mensajes',
+        pathMatch: 'full'
+      }
+    ]
   },
   {
     path: '**',

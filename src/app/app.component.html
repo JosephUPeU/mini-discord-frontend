@@ -1,14 +1,2 @@
-<div class="app-layout" *ngIf="mostrarLayout(); else authOnly">
-  <app-sidebar></app-sidebar>
-
-  <div class="layout-main-area">
-    <app-header></app-header>
-    <app-main-view>
-      <router-outlet></router-outlet>
-    </app-main-view>
-  </div>
-</div>
-
-<ng-template #authOnly>
-  <router-outlet></router-outlet>
-</ng-template>
+<!-- El punto de entrada a todas las rutas -->
+<router-outlet></router-outlet>

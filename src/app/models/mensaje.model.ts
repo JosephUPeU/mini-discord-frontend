@@ -1,13 +1,33 @@
-import { Reaccion } from "./reaccion.model";
+export interface ReaccionDto {
+  emoji: string;
+  usuarios: string[];
+}
 
-export interface Mensaje {
+export interface MensajeCanalResponse {
   id: string;
-  canalId: string;      // Chat de canal
-  usuarioId: string;    // Autor del mensaje
+  canalId: string;
+  servidorId: string;
+  autorId: string;
   contenido: string;
-  fecha: string;
-  adjuntos?: string[]; // URLs de archivos adjuntos
-  editado?: boolean; // Indica si el mensaje ha sido editado
-  timestamp: string; // Timestamp en milisegundos
-  reacciones?: Reaccion[]; // Reacciones al mensaje
+  timestamp: string; // ISO string
+  adjuntos: string[];
+  editado: boolean;
+  reacciones: ReaccionDto[];
+}
+
+export interface MensajeCanalRequest {
+  contenido: string;
+  adjuntos?: string[];
+}
+
+export interface MensajeCanalEditRequest {
+  mensajeId: string;
+  canalId: string;
+  nuevoContenido: string;
+}
+
+export interface ReaccionCanalRequest {
+  mensajeId: string;
+  canalId: string;
+  emoji: string;
 }

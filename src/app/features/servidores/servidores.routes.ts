@@ -7,14 +7,16 @@ export const SERVIDORES_ROUTES: Routes = [
     component: VistaServidorComponent,
     children: [
       {
-        path: 'canal/:canalId', // ← CAMBIO AQUÍ
-        loadComponent: () => import('../mensajes/chat/chat.component').then(m => m.ChatComponent)
+        path: 'canal/:canalId',
+        loadComponent: () =>
+          import('../mensajes/chat/chat.component').then(m => m.ChatComponent)
       },
       {
         path: '',
-        redirectTo: 'canal/c1', // ← también aquí
+        redirectTo: 'canal',
         pathMatch: 'full'
       }
     ]
   }
 ];
+

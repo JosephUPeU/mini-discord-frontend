@@ -1,34 +1,83 @@
-.titulo-categoria {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #999;
-  margin: 1rem 0 0.3rem;
+.lista-canales {
+  padding: 10px;
+  background-color: #2f3136;
+  color: white;
+  font-size: 14px;
+}
+
+.encabezado {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.encabezado h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.btn-agregar {
+  background-color: #5865f2;
+  border: none;
+  border-radius: 4px;
+  color: white;
+  width: 28px;
+  height: 28px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.canales-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .canal-item {
-  cursor: pointer;
-  padding: 0.3rem 0.5rem;
+  padding: 6px;
   border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  cursor: pointer;
 }
 
 .canal-item:hover {
-  background-color: #3e3f43;
+  background-color: #40444b;
 }
 
-.canal-item {
-  cursor: pointer;
-  padding: 0.3rem 0.5rem;
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #36393f;
+  padding: 20px;
+  border-radius: 8px;
+  width: 300px;
+  color: white;
+}
+
+.modal input,
+.modal select {
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 6px;
   border-radius: 4px;
-  transition: background 0.2s;
+  border: none;
 }
 
-.canal-item:hover {
-  background-color: #3e3f43;
-}
-
-.canal-item.activo {
-  background-color: #4e5058;
-  font-weight: bold;
-  border-left: 3px solid #5865f2;
-  padding-left: 0.5rem;
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
 }

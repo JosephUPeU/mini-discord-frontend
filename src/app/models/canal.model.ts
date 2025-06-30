@@ -1,11 +1,31 @@
-import { PermisoCanal } from "./permisocanal.model";
+export interface PermisoCanalResponse {
+  id: number;
+  rol: string;
+  puedeLeer: boolean;
+  puedeEscribir: boolean;
+}
 
-export interface Canal {
+export interface CanalResponse {
   id: string;
+  servidorId: string;
   nombre: string;
-  tipo: 'texto' | 'voz';
-  privado: boolean;
-  categoria: string;
-  descripcion?: string;
-  permisos: PermisoCanal[];
+  tipo: 'TEXTO' | 'VOZ';
+  permisos: PermisoCanalResponse[];
+}
+
+export interface CanalCreateRequest {
+  servidorId: string;
+  nombre: string;
+  tipo: 'TEXTO' | 'VOZ';
+}
+
+export interface CanalUpdateRequest {
+  nombre: string;
+  tipo: 'TEXTO' | 'VOZ';
+}
+
+export interface PermisoCanalRequest {
+  rol: string;
+  puedeLeer: boolean;
+  puedeEscribir: boolean;
 }

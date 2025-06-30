@@ -1,16 +1,47 @@
 <div class="chat-container">
-  <div class="mensajes">
+  <!-- Lista de mensajes -->
+  <div class="chat-mensajes">
+    <div *ngIf="cargando">Cargando mensajes...</div>
+    <div *ngIf="!cargando && mensajes.length === 0">Este canal no tiene mensajes aún.</div>
+
     <div *ngFor="let msg of mensajes" class="mensaje">
-      <div class="cabecera">
-        <span class="usuario">{{ msg.usuario }}</span>
-        <span class="hora">{{ msg.hora }}</span>
+      <div class="mensaje-info">
+        <span class="autor">{{ msg.autorId }}</span>
+        <span class="hora">{{ msg.timestamp | date:'shortTime' }}</span>
+        <span *ngIf="msg.editado" class="editado">(editado)</span>
       </div>
-      <div class="contenido">{{ msg.contenido }}</div>
+
+      <div class="mensaje-contenido">
+        <div class="contenido">{{ msg.contenido }}</div>
+
+        <!-- Reacciones alineadas a la derecha -->
+        <div class="reacciones" *ngIf="msg.reacciones.length > 0">
+          <button *ngFor="let reaccion of msg.reacciones"
+                  class="reaccion"
+                  [ngClass]="{ activa: reaccion.usuarios.includes(usuarioActual) }"
+                  (click)="reaccionar(msg.id, reaccion.emoji)">
+            {{ reaccion.emoji }} {{ reaccion.usuarios.length }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Botones de reacción -->
+      <div class="reaccionador">
+        <button (click)="reaccionar(msg.id, '❤️')">❤️</button>
+        <button (click)="reaccionar(msg.id, '👍')">👍</button>
+        <button (click)="reaccionar(msg.id, '😂')">😂</button>
+      </div>
     </div>
   </div>
 
-  <div class="input-area">
-    <input type="text" placeholder="Escribe un mensaje..." disabled />
-    <button disabled>Enviar</button>
+  <!-- Barra de entrada -->
+  <div class="chat-input">
+    <input
+      type="text"
+      [(ngModel)]="nuevoMensaje"
+      (keydown.enter)="enviarMensaje()"
+      placeholder="Escribe un mensaje..."
+    />
+    <button (click)="enviarMensaje()">Enviar</button>
   </div>
 </div>

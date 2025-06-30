@@ -1,13 +1,16 @@
-<div class="contenedor">
-  <aside class="columna canales">
+<div class="vista-servidor">
+  <!-- Izquierda: canales -->
+  <div class="columna canales">
     <app-lista-canales></app-lista-canales>
-  </aside>
+  </div>
 
-  <main class="columna chat">
-    <app-chat></app-chat>
-  </main>
+  <!-- Centro: mensajes -->
+  <div class="columna mensajes">
+    <router-outlet></router-outlet>
+  </div>
 
-  <aside class="columna miembros">
+  <!-- Derecha: miembros -->
+  <div class="columna miembros">
     <app-lista-miembros></app-lista-miembros>
-  </aside>
+  </div>
 </div>
